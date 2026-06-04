@@ -197,7 +197,7 @@ export const TWEETS = [
      pinned: true,
    },
   {
-    text: "Alpa - Ordinal Genesis",
+    text: "Alpha - Ordinal Genesis",
     date: "March 2026",
     url: "https://x.com/Waifudropz/status/2032507098714746937?s=20",
     image: tweet2
