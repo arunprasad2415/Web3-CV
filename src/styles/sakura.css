@@ -1,0 +1,26 @@
+/* ============================================================
+   SAKURA PETALS — full-page falling petals layer
+   ============================================================ */
+
+.sakura-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;   /* never blocks clicks */
+  z-index: 1;             /* above the black bg, below all content */
+}
+
+/* Lift the scrolling content above the petals. The nav (z-50) and
+   loader (z-100) keep their own higher z-index and are unaffected. */
+.app > section,
+.app > header,
+.app > footer {
+  position: relative;
+  z-index: 2;
+}
+
+/* Respect users who prefer reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  .sakura-canvas { display: none; }
+}

@@ -1,0 +1,98 @@
+/* ============================================================
+   RESPONSIVE — mobile + tablet overrides, all in one place.
+   Loaded last so these win over the base styles.
+   ============================================================ */
+
+/* Never allow sideways scrolling on small screens. */
+html, body { max-width: 100%; overflow-x: hidden; }
+
+/* ---------- TABLET (<= 900px) ---------- */
+@media (max-width: 900px) {
+  .section,
+  .section-narrow,
+  .section-narrow-md,
+  .section-narrow-lg {
+    padding-top: 4.5rem;
+    padding-bottom: 4.5rem;
+  }
+}
+
+/* ---------- PHONE (<= 640px) ---------- */
+@media (max-width: 640px) {
+
+  /* tighter section spacing + side padding */
+  .section { padding: 3.25rem 1rem; }
+  .section-narrow,
+  .section-narrow-md,
+  .section-narrow-lg { padding-top: 4rem; padding-bottom: 4rem; }
+
+  /* --- nav --- */
+  .nav-inner { padding: .7rem .9rem; }
+  .nav-brand { font-size: 1rem; }
+  .social-pill { height: 2.1rem; width: 2.1rem; }
+  .social-pill-icon { height: 15px; width: 15px; }
+  .nav-socials { gap: .35rem; }
+
+  /* --- hero --- */
+  .hero-avatar-float,
+  .hero-avatar { height: 9.5rem; width: 9.5rem; }
+  .hero-name { font-size: 2.1rem; }
+  .hero-title { font-size: .7rem; letter-spacing: .18em; }
+  .hero-typer { font-size: 1.05rem; }
+  .hero-buttons { gap: .6rem; }
+  .btn { padding: .65rem 1.3rem; font-size: .82rem; }
+
+  /* --- headings --- */
+  .heading-title { font-size: 1.9rem; }
+  .heading { margin-bottom: 2.5rem; }
+
+  /* --- about --- */
+  .about-card { padding: 1.4rem; }
+  .about-text { font-size: 1rem; }
+  .about-stats { gap: 1.6rem 2rem; }
+  .about-stats > * { flex: 0 1 100px; }
+  .stat-num { font-size: 1.8rem; }
+
+  /* --- skills --- */
+  .skill-card { padding: 1.25rem; }
+  .pill { padding: .45rem 1rem; font-size: .8rem; }
+  .pills-title { margin-top: 2.5rem; }
+
+  /* --- NFT cards: fill the width, no overflow --- */
+  .nft-grid { gap: 1.1rem; }
+  .nft-grid > * { flex: 1 1 100%; max-width: 100%; }
+
+  /* --- thread cards: full width on phones --- */
+  .threads-grid > * { flex: 1 1 100%; max-width: 100%; }
+
+  /* --- achievements --- */
+  .achievements-grid { gap: 1rem; }
+  .achievements-grid > * { flex: 1 1 45%; max-width: none; }
+  .achievement-card { padding: 1.3rem; }
+  .achievement-num { font-size: 1.9rem; }
+
+  /* --- goals --- */
+  .goal-card { padding: 1rem; }
+
+  /* --- contact --- */
+  .contact-card { padding: 1.5rem; }
+  .contact-icon { height: 3rem; width: 3rem; }
+  .contact-icon-svg { height: 1.25rem; width: 1.25rem; }
+
+  /* --- footer --- */
+  .footer-tagline { font-size: 1rem; padding: 0 1rem; }
+
+  /* disable the cursor glow on touch screens */
+  .cursor-glow { display: none; }
+
+  /* fewer petals feel lighter on small screens (visual only) */
+}
+
+/* ---------- VERY SMALL (<= 380px) ---------- */
+@media (max-width: 380px) {
+  .hero-name { font-size: 1.8rem; }
+  .heading-title { font-size: 1.65rem; }
+  .hero-buttons { flex-direction: column; width: 100%; }
+  .hero-buttons .btn { width: 100%; }
+  .achievements-grid > * { flex: 1 1 100%; }
+}

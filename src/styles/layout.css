@@ -1,0 +1,43 @@
+/* ============================================================
+   LAYOUT — app shell, sections, headings, loader, navbar
+   ============================================================ */
+
+.app { position: relative; width: 100%; background: var(--black); min-height: 100vh; }
+
+/* generic section spacing + max widths */
+.section { position: relative; margin: 0 auto; max-width: 72rem; padding: 5rem 1.25rem; }
+.section-narrow { max-width: 72rem; padding-top: 7rem; padding-bottom: 7rem; }
+.section-narrow-md { max-width: 56rem; padding-top: 7rem; padding-bottom: 7rem; }
+.section-narrow-lg { max-width: 64rem; padding-top: 7rem; padding-bottom: 7rem; }
+
+/* ---- heading ---- */
+.heading { text-align: center; margin-bottom: 3.5rem; }
+.heading-kicker { font-size: .75rem; letter-spacing: .35em; text-transform: uppercase; color: var(--zinc-500); margin: 0 0 .75rem; }
+.heading-title { font-family: var(--font-display); font-weight: 300; letter-spacing: -.02em; font-size: clamp(1.875rem, 5vw, 3rem); margin: 0; }
+.heading-divider { margin: 1.25rem auto 0; height: 1px; width: 6rem; background: linear-gradient(to right, transparent, var(--zinc-400), transparent); }
+
+/* ---- loader ---- */
+.loader { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--black); }
+.loader-rings { position: relative; height: 5rem; width: 5rem; }
+.loader-ring-base { position: absolute; inset: 0; border-radius: 9999px; border: 1px solid rgba(255,255,255,.1); }
+.loader-ring-1 { position: absolute; inset: 0; border-radius: 9999px; border-top: 1px solid rgba(255,255,255,.7); border-right: 1px solid rgba(255,255,255,.7); animation: ringSpin 1s linear infinite; }
+.loader-ring-2 { position: absolute; inset: .75rem; border-radius: 9999px; border-bottom: 1px solid var(--zinc-500); border-left: 1px solid var(--zinc-500); animation: ringSpin 1.6s linear infinite reverse; }
+.loader-text { margin-top: 1.75rem; font-size: 11px; letter-spacing: .5em; text-transform: uppercase; color: var(--zinc-500); }
+.loader-bar { margin-top: 1rem; height: 1px; width: 11rem; overflow: hidden; background: rgba(255,255,255,.1); }
+.loader-bar-fill { height: 100%; background: linear-gradient(to right, #fff, var(--zinc-500)); animation: loadbar 1.8s ease forwards; }
+
+/* ---- navbar ---- */
+.nav { position: fixed; top: 0; left: 0; right: 0; z-index: 50; }
+.nav-inner { margin: 0 auto; max-width: 72rem; display: flex; align-items: center; justify-content: space-between; padding: 1rem 1.25rem; transition: all .5s; }
+.nav-brand { font-family: var(--font-display); font-size: 1.125rem; letter-spacing: -.02em; color: #fff; background: none; border: none; cursor: pointer; }
+.nav-socials { display: flex; align-items: center; gap: .5rem; }
+
+.social-pill {
+  display: grid; place-items: center; height: 2.5rem; width: 2.5rem;
+  border-radius: 9999px; border: 1px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.03); color: var(--zinc-300);
+  transition: all .3s;
+}
+.social-pill:hover { transform: scale(1.1); border-color: rgba(255,255,255,.4); color: #fff; box-shadow: 0 0 22px rgba(255,255,255,.35); }
+.social-pill-icon { height: 18px; width: 18px; transition: transform .3s; }
+.social-pill:hover .social-pill-icon { transform: translateY(-1px); }

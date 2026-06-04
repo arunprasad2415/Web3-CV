@@ -1,0 +1,45 @@
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.hero { position: relative; display: flex; min-height: 100vh; align-items: center; justify-content: center; overflow: hidden; padding: 0 1.25rem; }
+
+.hero-grid {
+  position: absolute; inset: 0; opacity: .6;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 46px 46px;
+}
+
+.hero-glow {
+  pointer-events: none; position: absolute; left: 50%; top: 33%;
+  height: 480px; width: 480px; transform: translateX(-50%);
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 65%);
+  animation: pulseGlow 5s ease-in-out infinite;
+}
+
+.hero-content { position: relative; z-index: 10; margin: 0 auto; max-width: 48rem; text-align: center; }
+
+.hero-avatar-float { margin: 0 auto 2rem; display: grid; place-items: center; height: 13rem; width: 13rem; animation: float 6s ease-in-out infinite; }
+.hero-avatar { display: grid; place-items: center; height: 13rem; width: 13rem; border-radius: 9999px; background: linear-gradient(to bottom right, #27272a, #000); overflow: hidden; }
+.hero-avatar-img { height: 100%; width: 100%; object-fit: cover; border-radius: 9999px; }
+.hero-avatar-initials { font-family: var(--font-display); font-size: 2.75rem; color: #fff; }
+
+.hero-name { font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em; color: #fff; font-size: clamp(2.25rem, 7vw, 3.75rem); margin: 0; }
+.hero-title { margin-top: .75rem; font-size: clamp(.875rem, 2vw, 1rem); letter-spacing: .25em; text-transform: uppercase; color: var(--zinc-400); }
+
+.hero-typer { margin-top: 1.5rem; font-size: clamp(1.125rem, 3vw, 1.5rem); font-weight: 300; height: 2.25rem; }
+.hero-typer-prefix { color: var(--zinc-500); }
+
+.hero-buttons { margin-top: 2.5rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .75rem; }
+
+.btn { border-radius: 9999px; padding: .75rem 1.75rem; font-size: .875rem; font-weight: 500; cursor: pointer; transition: all .3s; }
+.btn-solid { background: #fff; color: #000; border: none; }
+.btn-solid:hover { transform: scale(1.05); }
+.btn-ghost { border: 1px solid rgba(255,255,255,.2); background: rgba(255,255,255,.04); color: #fff; backdrop-filter: blur(4px); }
+.btn-ghost:hover { transform: scale(1.05); border-color: rgba(255,255,255,.5); box-shadow: 0 0 24px rgba(255,255,255,.3); }
+
+.hero-scroll { position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%); color: var(--zinc-600); animation: float 2.5s ease-in-out infinite; }
+.hero-scroll span { font-size: .75rem; letter-spacing: .15em; }

@@ -1,0 +1,39 @@
+/* ============================================================
+   ABOUT + SKILLS
+   ============================================================ */
+
+/* ---- about ---- */
+.about-card { padding: 2rem; }
+@media (min-width: 768px) { .about-card { padding: 3rem; } }
+.about-text { font-size: clamp(1.125rem, 2.5vw, 1.25rem); font-weight: 300; line-height: 1.7; color: var(--zinc-300); margin: 0; }
+.about-stats { margin-top: 2.5rem; display: flex; flex-wrap: wrap; justify-content: center; gap: 2.5rem 3rem; }
+.about-stats > * { flex: 0 1 140px; }
+.stat { text-align: center; }
+.stat-num { font-family: var(--font-display); font-weight: 700; color: #fff; font-size: clamp(1.875rem, 4vw, 2.25rem); }
+.stat-label { margin-top: .5rem; font-size: .75rem; letter-spacing: .02em; color: var(--zinc-500); }
+
+/* ---- skills ---- */
+.skills-grid { display: grid; gap: 1.5rem; }
+@media (min-width: 768px) { .skills-grid { grid-template-columns: repeat(2, 1fr); } }
+.skill-card { padding: 1.75rem; }
+.skill-card-title { font-family: var(--font-display); margin: 0 0 1.5rem; font-size: 1.25rem; color: #fff; }
+.skill-card-bars { display: flex; flex-direction: column; gap: 1.25rem; }
+
+.skillbar-label { margin-bottom: .375rem; display: flex; justify-content: space-between; font-size: .875rem; }
+.skillbar-name { color: var(--zinc-300); }
+.skillbar-pct { color: var(--zinc-500); }
+.skillbar-track { height: 6px; overflow: hidden; border-radius: 9999px; background: rgba(255,255,255,.05); }
+.skillbar-fill { height: 100%; border-radius: 9999px; background: linear-gradient(to right, var(--zinc-300), #fff); box-shadow: 0 0 12px rgba(255,255,255,.4); }
+
+/* ---- pills (tech + tools) ---- */
+.pills-title { font-family: var(--font-display); margin: 4rem 0 1.5rem; text-align: center; font-size: 1.125rem; color: var(--zinc-400); }
+.pills-title-mt { margin-top: 3rem; }
+.pills { display: flex; flex-wrap: wrap; justify-content: center; gap: .75rem; }
+.pill-wrap { display: inline-flex; }
+.pill {
+  display: inline-block;
+  border-radius: 9999px; border: 1px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.03); padding: .5rem 1.25rem;
+  font-size: .875rem; color: var(--zinc-200); backdrop-filter: blur(4px);
+  white-space: nowrap;
+}

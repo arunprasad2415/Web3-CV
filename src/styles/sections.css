@@ -1,0 +1,105 @@
+/* ============================================================
+   NFT · ACHIEVEMENTS · GOALS · CONTACT · FOOTER
+   ============================================================ */
+
+/* ---- NFT showcase ---- */
+.nft-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+.nft-grid > * { flex: 0 1 320px; max-width: 360px; }
+.nft-card { overflow: hidden; }
+.nft-image {
+  display: flex; aspect-ratio: 1 / 1; align-items: center; justify-content: center;
+  border-bottom: 1px solid rgba(255,255,255,.05);
+  background: linear-gradient(to bottom right, rgba(255,255,255,.05), transparent);
+}
+.nft-image-img { height: 100%; width: 100%; object-fit: cover; }
+.nft-placeholder { text-align: center; color: var(--zinc-600); }
+.nft-placeholder-box {
+  margin: 0 auto .75rem; display: grid; place-items: center; height: 3.5rem; width: 3.5rem;
+  border-radius: .75rem; border: 1px dashed rgba(255,255,255,.15); font-size: 1.5rem;
+}
+.nft-placeholder p { font-size: .75rem; letter-spacing: .02em; margin: 0; }
+.nft-body { padding: 1.25rem; text-align: center; }
+.nft-name { font-family: var(--font-display); color: #fff; margin: 0; }
+
+/* ---- achievements ---- */
+.achievements-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+.achievements-grid > * { flex: 1 1 200px; max-width: 280px; }
+.achievement-card { padding: 1.75rem; text-align: center; }
+.achievement-num { font-family: var(--font-display); font-weight: 700; color: #fff; font-size: 2.25rem; text-shadow: 0 0 24px rgba(255,255,255,.4); }
+.achievement-label { margin: .5rem 0 0; font-size: .75rem; color: var(--zinc-500); }
+
+/* ---- goals ---- */
+.goals-grid { display: grid; gap: 1.25rem; }
+@media (min-width: 640px) { .goals-grid { grid-template-columns: repeat(2, 1fr); } }
+.goal-card { display: flex; align-items: center; gap: 1rem; padding: 1.25rem; }
+.goal-num {
+  font-family: var(--font-display); display: grid; place-items: center; height: 2.5rem; width: 2.5rem;
+  flex-shrink: 0; border-radius: 9999px; border: 1px solid rgba(255,255,255,.15); font-size: .875rem; color: #fff;
+}
+.goal-text { font-size: .875rem; color: var(--zinc-300); }
+
+/* ---- contact ---- */
+.contact-card { padding: 2rem; text-align: center; }
+@media (min-width: 768px) { .contact-card { padding: 3rem; } }
+.contact-text { margin: 0 auto; max-width: 28rem; color: var(--zinc-400); }
+.contact-icons { margin-top: 2.25rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 1rem; }
+.contact-icon {
+  display: grid; place-items: center; height: 3.5rem; width: 3.5rem;
+  border-radius: 9999px; border: 1px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.03); color: var(--zinc-300); transition: all .3s;
+}
+.contact-icon:hover { transform: scale(1.1); border-color: rgba(255,255,255,.4); color: #fff; box-shadow: 0 0 26px rgba(255,255,255,.4); }
+.contact-icon-svg { height: 1.5rem; width: 1.5rem; }
+
+/* ---- footer ---- */.footer { position: relative; overflow: hidden; border-top: 1px solid rgba(255,255,255,.05); padding: 3.5rem 0; text-align: center; }
+.footer-grid {
+  pointer-events: none; position: absolute; inset: 0; opacity: .3;
+  background-image:
+    linear-gradient(rgba(255,255,255,.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.04) 1px, transparent 1px);
+  background-size: 46px 46px;
+}
+.footer-glow {
+  pointer-events: none; position: absolute; left: 50%; top: 0; height: 10rem; width: 420px;
+  transform: translateX(-50%); border-radius: 9999px;
+  background: radial-gradient(circle, rgba(255,255,255,0.07), transparent 70%);
+  animation: pulseGlow 5s ease-in-out infinite;
+}
+.footer-tagline { position: relative; font-family: var(--font-display); font-size: clamp(1.125rem, 3vw, 1.25rem); color: var(--zinc-300); }
+.footer-tagline-text {
+  background: linear-gradient(to right, var(--zinc-400), #fff, var(--zinc-400));
+  background-size: 200% auto; -webkit-background-clip: text; background-clip: text; color: transparent;
+  animation: shimmer 5s linear infinite;
+}
+.footer-copy { position: relative; margin-top: 1rem; font-size: .75rem; color: var(--zinc-600); }
+
+/* ---- Content & Threads (tweet cards) ---- */
+.threads-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem; }
+.threads-grid > * { flex: 0 1 340px; max-width: 380px; }
+.thread-card {
+  display: flex; flex-direction: column; gap: .9rem;
+  padding: 1.4rem; text-decoration: none; height: 100%;
+}
+.thread-head { display: flex; align-items: center; gap: .7rem; }
+.thread-avatar {
+  height: 2.6rem; width: 2.6rem; flex-shrink: 0; border-radius: 9999px;
+  overflow: hidden; display: grid; place-items: center;
+  background: linear-gradient(to bottom right, #27272a, #000);
+  color: #fff; font-size: .8rem; font-family: var(--font-display);
+  border: 1px solid rgba(255,255,255,.1);
+}
+.thread-avatar-img { height: 100%; width: 100%; object-fit: cover; }
+.thread-id { display: flex; flex-direction: column; line-height: 1.2; }
+.thread-name { color: #fff; font-weight: 600; font-size: .9rem; }
+.thread-handle { color: var(--zinc-500); font-size: .8rem; }
+.thread-x { height: 1.1rem; width: 1.1rem; margin-left: auto; color: var(--zinc-400); }
+.thread-text { color: var(--zinc-300); font-size: .92rem; line-height: 1.5; margin: 0; }
+.thread-foot { display: flex; align-items: center; gap: .7rem; margin-top: auto; padding-top: .3rem; }
+.thread-pin { font-size: .72rem; color: var(--zinc-400); }
+.thread-date { font-size: .75rem; color: var(--zinc-500); }
+.thread-link { margin-left: auto; font-size: .8rem; color: #fff; transition: opacity .3s; }
+.thread-card:hover .thread-link { opacity: .7; }
+
+/* tweet card media (optional cover/screenshot) */
+.thread-media { border-radius: .75rem; overflow: hidden; border: 1px solid rgba(255,255,255,.08); }
+.thread-media-img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
