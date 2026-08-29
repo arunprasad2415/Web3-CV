@@ -11,7 +11,13 @@ export default function Hero({ scrollY, scrollTo }) {
   return (
     <section id="hero" className="hero">
       <div className="hero-video-bg">
-        <CursorScrubVideo src={HERO_VIDEO} axis="horizontal" objectFit="cover" className="hero-video-bg-el" />
+        <CursorScrubVideo
+          src={HERO_VIDEO}
+          axis="horizontal"
+          trackingArea="window"
+          objectFit="cover"
+          className="hero-video-bg-el"
+        />
         <div className="hero-video-scrim" />
       </div>
       <div className="hero-grid" />
