@@ -23,8 +23,10 @@ web3-portfolio/
     ├── App.jsx                 # Assembles all sections in order
     │
     ├── data/
-    │   └── content.js          # ★ EDIT YOUR CONTENT HERE — name, links,
-    │                           #   skills, experience, NFTs, goals, etc.
+    │   ├── content.json        # ★ ALL YOUR CONTENT — name, links, skills,
+    │   │                       #   experience, NFTs, goals, etc. Edit this
+    │   │                       #   file directly, or use /admin (see below).
+    │   └── content.js          # thin re-export of content.json, don't edit
     │
     ├── hooks/
     │   └── index.js            # useReveal, useScrollY, useBlackBody
@@ -63,14 +65,39 @@ web3-portfolio/
 
 ## Customizing
 
-1. **Text, links, numbers** → `src/data/content.js`. You almost never need to
+1. **Text, links, numbers** → `src/data/content.json`. You almost never need to
    touch the components. Update `SOCIALS`, `PROFILE`, `EXPERIENCE`, `TOOLS`, etc.
-2. **NFT images** → in `content.js`, set the `image` field of an entry in
-   `NFT_COLLECTIONS` to an image URL/path (leave `null` for the empty placeholder).
+2. **NFT / tweet / profile images** → live in `public/images/`, referenced by
+   path (e.g. `/images/nft1.jpg`) from `content.json`.
 3. **Colors** → CSS variables at the top of `src/styles/global.css`
    (`--black`, `--white`, `--silver`, …).
 4. **Section order** → `src/App.jsx`.
 5. **A specific section's look** → its matching file in `src/styles/`.
+
+## Admin panel (`/admin`)
+
+Edit the live site's content from a browser instead of git — save commits
+straight to this repo's `main` branch and Vercel auto-redeploys.
+
+**Setup (one time), in the Vercel project's Environment Variables:**
+
+| Variable         | Value                                                              |
+|------------------|---------------------------------------------------------------------|
+| `ADMIN_PASSWORD` | Password you'll use to log into `/admin`                            |
+| `ADMIN_SECRET`   | Any long random string (used to sign the login session cookie)      |
+| `GITHUB_TOKEN`   | A GitHub personal access token with `repo` (or fine-grained "Contents: Read and write") scope on this repo |
+| `GITHUB_OWNER`   | `arunprasad2415`                                                     |
+| `GITHUB_REPO`    | `Web3-CV`                                                            |
+| `GITHUB_BRANCH`  | `main` (optional, defaults to `main`)                                |
+
+Redeploy after adding these. Then visit `https://waifudrops.xyz/admin`,
+log in, edit the JSON, and hit **Save & Deploy**. Image slots (profile
+photo, NFT cards, tweet screenshots) can be replaced in place from the same
+page without touching the JSON.
+
+`npm run dev` only serves the frontend — the `/api` functions need
+`vercel dev` (or Vercel's dashboard) to run, since they're serverless
+functions, not part of the Vite dev server.
 
 ## Notes
 

@@ -1,0 +1,157 @@
+{
+  "SOCIALS": [
+    { "key": "Telegram", "label": "Telegram", "href": "https://t.me/Arunajai0" },
+    { "key": "X", "label": "X (Twitter)", "href": "https://x.com/Waifudropz" },
+    { "key": "Discord", "label": "Discord", "href": "https://discord.com/users/872683929407225906" },
+    { "key": "Github", "label": "GitHub", "href": "https://github.com/arunprasad2415" }
+  ],
+  "TYPER_WORDS": [
+    "Early Project Hunter",
+    "Web3 Researcher",
+    "NFT Researcher",
+    "Community Builder"
+  ],
+  "ABOUT_STATS": [
+    ["Years in Web3", 4, "+"],
+    ["Projects Explored", 100, "+"],
+    ["Communities Joined", 5, "+"]
+  ],
+  "SKILL_GROUPS": [
+    {
+      "title": "Web3 Research",
+      "items": [
+        ["Early Project Discovery", 92],
+        ["Ecosystem Analysis", 88],
+        ["Mainnet Tracking", 85],
+        ["Blockchain Fundamentals", 90]
+      ]
+    },
+    {
+      "title": "Community & Growth",
+      "items": [
+        ["Community Engagement", 94],
+        ["Social Growth", 87],
+        ["Project Research", 90],
+        ["Content Sharing", 83],
+        ["User Onboarding", 86]
+      ]
+    }
+  ],
+  "TECH_SKILLS": ["HTML", "CSS", "JavaScript", "React JS", "Node.js", "MongoDB", "Git & GitHub"],
+  "TOOLS": [
+    "DeFiLlama", "Dune", "Arkham", "Discord", "Telegram", "X (Twitter)",
+    "Notion", "Canva", "DexScreener", "Vulcan", "MEE6", "Arcane",
+    "Collab.Land", "Matrica", "Guild.xyz"
+  ],
+  "AI_TOOLS": ["Claude", "ChatGPT", "Hermes", "OpenClaw", "LLM APIs"],
+  "EXPERIENCE": [
+    {
+      "role": "Open To New Roles",
+      "meta": "Available · Mod · Community Manager · Ambassador",
+      "badge": "Open",
+      "points": [
+        "Actively seeking Moderator, Community Manager, and Ambassador positions",
+        "Available to contribute to emerging Web3 and NFT projects",
+        "Open to both part-time and full-time community roles"
+      ]
+    },
+    {
+      "role": "Collab Manager — Project GRIT",
+      "meta": "Current · Japanese-based NFT Collection",
+      "badge": "Current",
+      "points": [
+        "Managing collaborations and partnerships for a Japanese-based NFT collection",
+        "Coordinating cross-community campaigns and whitelist initiatives",
+        "Building relationships with partner projects and communities",
+        "Driving community growth and engagement"
+      ]
+    },
+    {
+      "role": "Collab Manager — Emperor Journal",
+      "meta": "Current · Web3 NFT Community",
+      "badge": "Current",
+      "points": [
+        "Managing collaborations and strategic partnerships",
+        "Creating and managing Atlas3 giveaway campaigns",
+        "Building relationships with partner communities",
+        "Driving community growth and engagement"
+      ]
+    },
+    {
+      "role": "Web3 Research Contributor",
+      "points": [
+        "Researched emerging blockchain ecosystems",
+        "Identified promising early-stage projects",
+        "Participated in community activities",
+        "Shared ecosystem updates and findings"
+      ]
+    },
+    {
+      "role": "Community Moderator / Contributor",
+      "points": [
+        "Assisted community members",
+        "Helped onboard new users",
+        "Performed ecosystem testing",
+        "Submitted feedback",
+        "Documented project progress"
+      ]
+    },
+    {
+      "role": "Content & Social Contributor",
+      "points": ["Created educational threads", "Shared project updates"]
+    }
+  ],
+  "NFT_COLLECTIONS": [
+    { "name": "Yumemono", "image": "/images/nft1.jpg" },
+    { "name": "GRIT.", "image": "/images/GRIT.jpg" },
+    { "name": "moemoe", "image": "/images/moemoe.jpg" },
+    { "name": "Lightka", "image": "/images/Lightka.jpg" },
+    { "name": "MAdoll", "image": "/images/Madoll.jpg" }
+  ],
+  "ACHIEVEMENTS": [
+    ["Collabs Secured", 4],
+    ["NFT Spots Given Away", 20],
+    ["Early Projects Spotted", 50]
+  ],
+  "GOALS": [
+    "Become a recognized Web3 researcher",
+    "Join a leading blockchain project",
+    "Contribute to ecosystem growth",
+    "Expand technical blockchain knowledge",
+    "Build Web3 products",
+    "Become an ambassador for major projects",
+    "Learn smart contract development",
+    "Explore AI + Blockchain integration"
+  ],
+  "PROFILE": {
+    "name": "Waifu Drops",
+    "initials": "WD",
+    "photo": "/images/profile.jpg",
+    "title": "Web3 Researcher & Community Contributor",
+    "email": "arunprasad2415@gmail.com",
+    "emailSubject": "Web3 opportunity",
+    "aboutText": "Passionate Web3 enthusiast focused on discovering early-stage projects, researching ecosystems, participating in testnets, exploring NFT communities, and helping users find opportunities in the blockchain space.",
+    "footerTagline": "Building the future of Web3, one ecosystem at a time."
+  },
+  "TWEETS": [
+    {
+      "text": "About Efdot Studio",
+      "date": "may 2026",
+      "url": "https://x.com/Waifudropz/status/...",
+      "image": "/images/tweet1.jpg",
+      "pinned": true
+    },
+    {
+      "text": "Alpha - Ordinal Genesis",
+      "date": "March 2026",
+      "url": "https://x.com/Waifudropz/status/2032507098714746937?s=20",
+      "image": "/images/tweet2.jpg"
+    },
+    {
+      "text": "NFT Alpha",
+      "date": "May 2026",
+      "url": "https://x.com/Waifudropz/status/2059137043981361184?s=20",
+      "image": "/images/tweet3.jpg"
+    }
+  ]
+}
