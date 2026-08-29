@@ -1,85 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import Reveal from "../components/Reveal.jsx";
+import { Icon } from "../components/Icons.jsx";
 import { validateContent } from "../lib/validateContent.js";
 
 const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
-
-const styles = {
-  page: {
-    minHeight: "100vh",
-    background: "#0b0d12",
-    color: "#eaeaea",
-    fontFamily: "system-ui, sans-serif",
-    padding: "2rem",
-  },
-  card: {
-    maxWidth: 720,
-    margin: "0 auto",
-    background: "#151822",
-    border: "1px solid #2a2f3d",
-    borderRadius: 12,
-    padding: "2rem",
-  },
-  headerRow: { display: "flex", justifyContent: "space-between", alignItems: "center" },
-  input: {
-    width: "100%",
-    padding: "0.6rem 0.8rem",
-    borderRadius: 8,
-    border: "1px solid #2a2f3d",
-    background: "#0b0d12",
-    color: "#eaeaea",
-    marginBottom: "0.75rem",
-    fontSize: 14,
-  },
-  textarea: {
-    width: "100%",
-    minHeight: 480,
-    padding: "0.8rem",
-    borderRadius: 8,
-    border: "1px solid #2a2f3d",
-    background: "#0b0d12",
-    color: "#eaeaea",
-    fontFamily: "ui-monospace, monospace",
-    fontSize: 13,
-    lineHeight: 1.5,
-  },
-  button: {
-    padding: "0.6rem 1.2rem",
-    borderRadius: 8,
-    border: "none",
-    background: "#6d5efc",
-    color: "#fff",
-    fontWeight: 600,
-    cursor: "pointer",
-    fontSize: 14,
-  },
-  buttonSecondary: {
-    padding: "0.5rem 1rem",
-    borderRadius: 8,
-    border: "1px solid #2a2f3d",
-    background: "transparent",
-    color: "#eaeaea",
-    cursor: "pointer",
-    fontSize: 13,
-  },
-  buttonDisabled: { opacity: 0.5, cursor: "not-allowed" },
-  msg: (ok) => ({
-    marginTop: "0.75rem",
-    color: ok ? "#7ee787" : "#ff7b7b",
-    fontSize: 14,
-    whiteSpace: "pre-wrap",
-  }),
-  errorList: {
-    marginTop: "0.75rem",
-    color: "#ff7b7b",
-    fontSize: 13,
-    background: "#2a1418",
-    border: "1px solid #4a1f26",
-    borderRadius: 8,
-    padding: "0.75rem 1rem",
-  },
-  label: { display: "block", marginBottom: 6, fontSize: 13, color: "#9aa1b3" },
-  section: { marginTop: "2rem", paddingTop: "1.5rem", borderTop: "1px solid #2a2f3d" },
-};
 
 function extractImagePaths(obj) {
   const paths = new Set();
@@ -259,115 +183,132 @@ export default function Admin() {
 
   if (checkingSession) {
     return (
-      <div style={styles.page}>
-        <div style={{ ...styles.card, maxWidth: 380, marginTop: "10vh", textAlign: "center" }}>
-          <p style={{ color: "#9aa1b3" }}>Checking session...</p>
-        </div>
+      <div className="app admin-page">
+        <div className="hero-grid" />
+        <p className="admin-loading">Checking session…</p>
       </div>
     );
   }
 
   if (!authed) {
     return (
-      <div style={styles.page}>
-        <div style={{ ...styles.card, maxWidth: 380, marginTop: "10vh", textAlign: "center" }}>
-          <h2 style={{ marginTop: 0 }}>Admin Login</h2>
-          <p style={{ color: "#9aa1b3", fontSize: 14 }}>
-            Restricted to the <code>arunprasad2415</code> GitHub account.
-          </p>
-          <a
-            href="/api/github-login"
-            style={{ ...styles.button, display: "inline-block", textDecoration: "none" }}
-          >
-            Log in with GitHub
-          </a>
+      <div className="app admin-page">
+        <div className="hero-grid" />
+        <div className="admin-shell">
+          <Reveal>
+            <div className="glass grad-border admin-card admin-card-narrow">
+              <p className="admin-kicker">Admin Access</p>
+              <h1 className="admin-title grad-text">Portfolio Control</h1>
+              <p className="admin-sub">
+                Restricted to the <code>arunprasad2415</code> GitHub account.
+              </p>
+              <a href="/api/github-login" className="btn btn-solid admin-github-btn">
+                <Icon.Github />
+                Log in with GitHub
+              </a>
+            </div>
+          </Reveal>
         </div>
       </div>
     );
   }
 
   return (
-    <div style={styles.page}>
-      <div style={styles.card}>
-        <div style={styles.headerRow}>
-          <h2 style={{ marginTop: 0 }}>Portfolio Content Editor</h2>
-          <button style={styles.buttonSecondary} onClick={logout}>
-            Log out
-          </button>
-        </div>
-        <p style={{ color: "#9aa1b3", fontSize: 14 }}>
-          Edit the JSON below (all portfolio text, links, stats, experience, etc.), then Save.
-          Saving commits directly to GitHub and Vercel auto-redeploys the live site.
-        </p>
+    <div className="app admin-page">
+      <div className="hero-grid" />
+      <div className="admin-shell">
+        <Reveal>
+          <div className="glass grad-border admin-card">
+            <div className="admin-header">
+              <div>
+                <p className="admin-kicker">Admin Access</p>
+                <h1 className="admin-title grad-text">Content Editor</h1>
+              </div>
+              <button className="btn btn-ghost" onClick={logout}>
+                Log out
+              </button>
+            </div>
+            <p className="admin-sub">
+              Edit the JSON below — all portfolio text, links, stats, and experience. Saving
+              commits straight to GitHub and Vercel redeploys the live site automatically.
+            </p>
 
-        <textarea
-          style={styles.textarea}
-          value={jsonText}
-          onChange={(e) => setJsonText(e.target.value)}
-          spellCheck={false}
-          disabled={loadingContent}
-        />
-        {parsed.error && <div style={styles.msg(false)}>Invalid JSON: {parsed.error}</div>}
+            <textarea
+              className="admin-textarea"
+              value={jsonText}
+              onChange={(e) => setJsonText(e.target.value)}
+              spellCheck={false}
+              disabled={loadingContent}
+            />
+            {parsed.error && (
+              <div className="admin-msg admin-msg-error">Invalid JSON: {parsed.error}</div>
+            )}
 
-        <div style={{ marginTop: "1rem", display: "flex", gap: "0.75rem" }}>
-          <button
-            style={{ ...styles.button, ...(busy ? styles.buttonDisabled : {}) }}
-            onClick={save}
-            disabled={busy}
-          >
-            {saving ? "Saving..." : "Save & Deploy"}
-          </button>
-          <button
-            style={{ ...styles.buttonSecondary, ...(busy ? styles.buttonDisabled : {}) }}
-            onClick={loadContent}
-            disabled={busy}
-          >
-            {loadingContent ? "Reloading..." : "Reload"}
-          </button>
-        </div>
+            <div className="admin-actions">
+              <button
+                className={`btn btn-solid ${busy ? "btn-disabled" : ""}`}
+                onClick={save}
+                disabled={busy}
+              >
+                {saving ? "Saving…" : "Save & Deploy"}
+              </button>
+              <button
+                className={`btn btn-ghost ${busy ? "btn-disabled" : ""}`}
+                onClick={loadContent}
+                disabled={busy}
+              >
+                {loadingContent ? "Reloading…" : "Reload"}
+              </button>
+            </div>
 
-        {message && <div style={styles.msg(message.ok)}>{message.text}</div>}
-        {validationErrors.length > 0 && (
-          <ul style={styles.errorList}>
-            {validationErrors.map((e, i) => (
-              <li key={i}>{e}</li>
-            ))}
-          </ul>
-        )}
+            {message && (
+              <div className={`admin-msg ${message.ok ? "admin-msg-ok" : "admin-msg-error"}`}>
+                {message.text}
+              </div>
+            )}
+            {validationErrors.length > 0 && (
+              <ul className="admin-error-list">
+                {validationErrors.map((e, i) => (
+                  <li key={i}>{e}</li>
+                ))}
+              </ul>
+            )}
 
-        <div style={styles.section}>
-          <h3>Replace an image</h3>
-          <p style={{ color: "#9aa1b3", fontSize: 14 }}>
-            Pick which image to overwrite, then choose a file (max {MAX_IMAGE_BYTES / 1024 / 1024}MB).
-            The existing path in the JSON above keeps working — the file behind it is replaced in
-            place.
-          </p>
-          <label style={styles.label}>Image slot</label>
-          <select
-            style={styles.input}
-            value={uploadPath}
-            onChange={(e) => setUploadPath(e.target.value)}
-            disabled={uploading}
-          >
-            {imagePaths.map((p) => (
-              <option key={p} value={p}>
-                {p}
-              </option>
-            ))}
-          </select>
-          <input
-            type="file"
-            accept="image/jpeg,image/png,image/webp,image/gif"
-            onChange={(e) => uploadImage(e.target.files[0])}
-            disabled={uploading || !uploadPath}
-          />
-          {uploading && <p style={{ color: "#9aa1b3", fontSize: 13 }}>Uploading...</p>}
-          <p style={{ color: "#666", fontSize: 12, marginTop: "0.75rem" }}>
-            To add a brand-new image (e.g. a new NFT card), add its entry in the JSON with a new
-            path like <code>/images/new-card.jpg</code>, save, then come back here, pick that
-            path from the list and upload the file.
-          </p>
-        </div>
+            <div className="admin-section">
+              <h3>Replace an image</h3>
+              <p className="admin-sub">
+                Pick which image to overwrite, then choose a file (max{" "}
+                {MAX_IMAGE_BYTES / 1024 / 1024}MB). The existing path in the JSON above keeps
+                working — the file behind it is replaced in place.
+              </p>
+              <select
+                className="admin-select"
+                value={uploadPath}
+                onChange={(e) => setUploadPath(e.target.value)}
+                disabled={uploading}
+              >
+                {imagePaths.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </select>
+              <input
+                className="admin-file"
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                onChange={(e) => uploadImage(e.target.files[0])}
+                disabled={uploading || !uploadPath}
+              />
+              {uploading && <p className="admin-loading">Uploading…</p>}
+              <p className="admin-hint">
+                To add a brand-new image (e.g. a new NFT card), add its entry in the JSON with a
+                new path like <code>/images/new-card.jpg</code>, save, then come back here, pick
+                that path from the list and upload the file.
+              </p>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </div>
   );

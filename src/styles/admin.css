@@ -1,0 +1,173 @@
+/* ============================================================
+   ADMIN — same voice as the portfolio (black, glass, silver/white,
+   Sora + Syne), laid out for a dashboard instead of a landing page.
+   ============================================================ */
+
+.admin-page {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.25rem;
+  overflow: hidden;
+}
+
+.admin-shell {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 760px;
+}
+
+.admin-card {
+  padding: 2.5rem;
+}
+
+.admin-card-narrow {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.admin-kicker {
+  font-size: .75rem;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  color: var(--zinc-500);
+  margin: 0 0 .75rem;
+}
+
+.admin-title {
+  font-family: var(--font-display);
+  font-weight: 300;
+  letter-spacing: -.02em;
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  margin: 0;
+}
+
+.admin-sub {
+  margin-top: .75rem;
+  color: var(--zinc-400);
+  font-size: .9rem;
+  line-height: 1.6;
+}
+
+.admin-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .5rem;
+}
+
+.admin-github-btn {
+  margin-top: 1.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  text-decoration: none;
+}
+.admin-github-btn svg { height: 18px; width: 18px; }
+
+.admin-loading {
+  color: var(--zinc-500);
+  font-size: .85rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.admin-textarea {
+  width: 100%;
+  min-height: 440px;
+  margin-top: 1.5rem;
+  padding: 1rem 1.1rem;
+  border-radius: .75rem;
+  border: 1px solid rgba(255, 255, 255, .1);
+  background: rgba(0, 0, 0, .5);
+  color: var(--zinc-200);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  resize: vertical;
+  transition: border-color .3s;
+}
+.admin-textarea:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, .35);
+}
+.admin-textarea:disabled { opacity: .5; }
+
+.admin-actions {
+  margin-top: 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+}
+
+.btn-disabled { opacity: .45; cursor: not-allowed; pointer-events: none; }
+
+.admin-msg {
+  margin-top: 1.25rem;
+  padding: .85rem 1.1rem;
+  border-radius: .6rem;
+  font-size: .875rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  border: 1px solid;
+}
+.admin-msg-ok {
+  color: #b9f5c4;
+  background: rgba(126, 231, 135, .08);
+  border-color: rgba(126, 231, 135, .25);
+}
+.admin-msg-error {
+  color: #ffc4c4;
+  background: rgba(255, 123, 123, .08);
+  border-color: rgba(255, 123, 123, .25);
+}
+
+.admin-error-list {
+  margin: 1.25rem 0 0;
+  padding: .85rem 1.25rem;
+  border-radius: .6rem;
+  color: #ffc4c4;
+  background: rgba(255, 123, 123, .08);
+  border: 1px solid rgba(255, 123, 123, .25);
+  font-size: .8rem;
+  line-height: 1.7;
+}
+
+.admin-section {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, .08);
+}
+.admin-section h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  margin: 0 0 .5rem;
+  font-size: 1.1rem;
+}
+
+.admin-select,
+.admin-file {
+  width: 100%;
+  padding: .65rem .9rem;
+  border-radius: .6rem;
+  border: 1px solid rgba(255, 255, 255, .1);
+  background: rgba(0, 0, 0, .5);
+  color: var(--zinc-200);
+  font-size: .875rem;
+  margin-bottom: .75rem;
+}
+.admin-select:disabled,
+.admin-file:disabled { opacity: .5; }
+
+.admin-hint {
+  color: var(--zinc-500);
+  font-size: .78rem;
+  margin-top: .75rem;
+  line-height: 1.6;
+}
+.admin-hint code { color: var(--zinc-400); }
