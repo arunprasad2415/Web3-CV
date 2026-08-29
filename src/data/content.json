@@ -1,49 +1,131 @@
 {
   "SOCIALS": [
-    { "key": "Telegram", "label": "Telegram", "href": "https://t.me/Arunajai0" },
-    { "key": "X", "label": "X (Twitter)", "href": "https://x.com/Waifudropz" },
-    { "key": "Discord", "label": "Discord", "href": "https://discord.com/users/872683929407225906" },
-    { "key": "Github", "label": "GitHub", "href": "https://github.com/arunprasad2415" }
+    {
+      "key": "Telegram",
+      "label": "Telegram",
+      "href": "https://t.me/Arunajai0"
+    },
+    {
+      "key": "X",
+      "label": "X (Twitter)",
+      "href": "https://x.com/Waifudropz"
+    },
+    {
+      "key": "Discord",
+      "label": "Discord",
+      "href": "https://discord.com/users/872683929407225906"
+    },
+    {
+      "key": "Github",
+      "label": "GitHub",
+      "href": "https://github.com/arunprasad2415"
+    }
   ],
   "TYPER_WORDS": [
     "Early Project Hunter",
     "Web3 Researcher",
     "NFT Researcher",
-    "Community Builder"
+    "Community Builder",
+    "Degen"
   ],
   "ABOUT_STATS": [
-    ["Years in Web3", 4, "+"],
-    ["Projects Explored", 100, "+"],
-    ["Communities Joined", 5, "+"]
+    [
+      "Years in Web3",
+      4,
+      "+"
+    ],
+    [
+      "Projects Explored",
+      100,
+      "+"
+    ],
+    [
+      "Communities Joined",
+      5,
+      "+"
+    ]
   ],
   "SKILL_GROUPS": [
     {
       "title": "Web3 Research",
       "items": [
-        ["Early Project Discovery", 92],
-        ["Ecosystem Analysis", 88],
-        ["Mainnet Tracking", 85],
-        ["Blockchain Fundamentals", 90]
+        [
+          "Early Project Discovery",
+          92
+        ],
+        [
+          "Ecosystem Analysis",
+          88
+        ],
+        [
+          "Mainnet Tracking",
+          85
+        ],
+        [
+          "Blockchain Fundamentals",
+          90
+        ]
       ]
     },
     {
       "title": "Community & Growth",
       "items": [
-        ["Community Engagement", 94],
-        ["Social Growth", 87],
-        ["Project Research", 90],
-        ["Content Sharing", 83],
-        ["User Onboarding", 86]
+        [
+          "Community Engagement",
+          94
+        ],
+        [
+          "Social Growth",
+          87
+        ],
+        [
+          "Project Research",
+          90
+        ],
+        [
+          "Content Sharing",
+          83
+        ],
+        [
+          "User Onboarding",
+          86
+        ]
       ]
     }
   ],
-  "TECH_SKILLS": ["HTML", "CSS", "JavaScript", "React JS", "Node.js", "MongoDB", "Git & GitHub"],
-  "TOOLS": [
-    "DeFiLlama", "Dune", "Arkham", "Discord", "Telegram", "X (Twitter)",
-    "Notion", "Canva", "DexScreener", "Vulcan", "MEE6", "Arcane",
-    "Collab.Land", "Matrica", "Guild.xyz"
+  "TECH_SKILLS": [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "React JS",
+    "Node.js",
+    "MongoDB",
+    "Git & GitHub"
   ],
-  "AI_TOOLS": ["Claude", "ChatGPT", "Hermes", "OpenClaw", "LLM APIs"],
+  "TOOLS": [
+    "DeFiLlama",
+    "Dune",
+    "Arkham",
+    "Discord",
+    "Telegram",
+    "X (Twitter)",
+    "Notion",
+    "Canva",
+    "DexScreener",
+    "Vulcan",
+    "MEE6",
+    "Arcane",
+    "Collab.Land",
+    "Matrica",
+    "Guild.xyz"
+  ],
+  "AI_TOOLS": [
+    "Claude",
+    "ChatGPT",
+    "Hermes",
+    "OpenClaw",
+    "LLM APIs"
+  ],
   "EXPERIENCE": [
     {
       "role": "Open To New Roles",
@@ -98,20 +180,47 @@
     },
     {
       "role": "Content & Social Contributor",
-      "points": ["Created educational threads", "Shared project updates"]
+      "points": [
+        "Created educational threads",
+        "Shared project updates"
+      ]
     }
   ],
   "NFT_COLLECTIONS": [
-    { "name": "Yumemono", "image": "/images/nft1.jpg" },
-    { "name": "GRIT.", "image": "/images/GRIT.jpg" },
-    { "name": "moemoe", "image": "/images/moemoe.jpg" },
-    { "name": "Lightka", "image": "/images/Lightka.jpg" },
-    { "name": "MAdoll", "image": "/images/Madoll.jpg" }
+    {
+      "name": "Yumemono",
+      "image": "/images/nft1.jpg"
+    },
+    {
+      "name": "GRIT.",
+      "image": "/images/GRIT.jpg"
+    },
+    {
+      "name": "moemoe",
+      "image": "/images/moemoe.jpg"
+    },
+    {
+      "name": "Lightka",
+      "image": "/images/Lightka.jpg"
+    },
+    {
+      "name": "MAdoll",
+      "image": "/images/Madoll.jpg"
+    }
   ],
   "ACHIEVEMENTS": [
-    ["Collabs Secured", 4],
-    ["NFT Spots Given Away", 20],
-    ["Early Projects Spotted", 50]
+    [
+      "Collabs Secured",
+      4
+    ],
+    [
+      "NFT Spots Given Away",
+      20
+    ],
+    [
+      "Early Projects Spotted",
+      50
+    ]
   ],
   "GOALS": [
     "Become a recognized Web3 researcher",
