@@ -1,78 +1,70 @@
 import { useEffect, useMemo, useState } from "react";
-import Reveal from "../components/Reveal.jsx";
 import { Icon } from "../components/Icons.jsx";
 import { validateContent } from "../lib/validateContent.js";
+import { humanizeContentError, humanizeCaughtError } from "./lib/humanizeError.js";
 
-const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
+import Sidebar, { SECTIONS } from "./components/Sidebar.jsx";
+import SaveBar from "./components/SaveBar.jsx";
+import ConfirmDialog from "./components/ConfirmDialog.jsx";
 
-function extractImagePaths(obj) {
-  const paths = new Set();
-  if (obj?.PROFILE?.photo) paths.add(obj.PROFILE.photo);
-  (obj?.NFT_COLLECTIONS || []).forEach((c) => c?.image && paths.add(c.image));
-  (obj?.TWEETS || []).forEach((t) => t?.image && paths.add(t.image));
-  return [...paths];
-}
+import OverviewSection from "./sections/OverviewSection.jsx";
+import ProfileSection from "./sections/ProfileSection.jsx";
+import AboutStatsSection from "./sections/AboutStatsSection.jsx";
+import ExperienceSection from "./sections/ExperienceSection.jsx";
+import SkillsSection from "./sections/SkillsSection.jsx";
+import NFTSection from "./sections/NFTSection.jsx";
+import AchievementsSection from "./sections/AchievementsSection.jsx";
+import GoalsSection from "./sections/GoalsSection.jsx";
+import ThreadsSection from "./sections/ThreadsSection.jsx";
+import SocialsSection from "./sections/SocialsSection.jsx";
 
-// Parses jsonText for display/derived state without ever throwing — invalid
-// JSON while mid-edit is expected, it must not crash the whole admin page.
-function tryParse(text) {
-  try {
-    return { value: JSON.parse(text), error: null };
-  } catch (err) {
-    return { value: null, error: err.message };
-  }
+const SECTION_TITLES = Object.fromEntries(SECTIONS.map((s) => [s.id, s.label]));
+
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("Could not read the selected file"));
+    reader.readAsDataURL(file);
+  });
 }
 
 export default function Admin() {
   const [authed, setAuthed] = useState(false);
   const [checkingSession, setCheckingSession] = useState(true);
 
-  const [jsonText, setJsonText] = useState("");
+  const [content, setContent] = useState(null);
+  const [savedSnapshot, setSavedSnapshot] = useState(null);
   const [sha, setSha] = useState(null);
-  const [message, setMessage] = useState(null); // { ok, text }
-  const [validationErrors, setValidationErrors] = useState([]);
+  const [savedAt, setSavedAt] = useState(null);
+
+  const [activeSection, setActiveSection] = useState("overview");
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  const [pendingImages, setPendingImages] = useState({}); // slotId -> {file, filename, previewUrl}
+  const [imageErrors, setImageErrors] = useState({});
+
   const [loadingContent, setLoadingContent] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [uploadPath, setUploadPath] = useState("");
+  const [message, setMessage] = useState(null); // { ok, text }
+  const [validationErrors, setValidationErrors] = useState([]); // [{text, sectionId}]
+  const [confirmSaveOpen, setConfirmSaveOpen] = useState(false);
 
-  const busy = loadingContent || saving || uploading;
+  const dirty = useMemo(() => {
+    if (!content || savedSnapshot === null) return false;
+    return JSON.stringify(content) !== savedSnapshot || Object.keys(pendingImages).length > 0;
+  }, [content, savedSnapshot, pendingImages]);
 
-  const parsed = useMemo(() => tryParse(jsonText || "{}"), [jsonText]);
-  const imagePaths = useMemo(() => extractImagePaths(parsed.value), [parsed.value]);
-
-  // Runs once on mount: a GitHub OAuth login lands back here via a full-page
-  // redirect (not a fetch), so React state starts fresh and has to ask the
-  // server whether the session cookie it already has is valid.
+  // Warn on tab close/reload while there are unsaved changes.
   useEffect(() => {
-    (async () => {
-      try {
-        const res = await fetch("/api/content");
-        if (res.ok) {
-          const data = await res.json();
-          setJsonText(JSON.stringify(data.content, null, 2));
-          setSha(data.sha);
-          setAuthed(true);
-        }
-      } finally {
-        setCheckingSession(false);
-      }
-    })();
-  }, []);
-
-  async function logout() {
-    setAuthed(false);
-    setJsonText("");
-    setSha(null);
-    setMessage(null);
-    setValidationErrors([]);
-    try {
-      await fetch("/api/logout", { method: "POST" });
-    } catch {
-      // Cookie is cleared client-side by the response header regardless;
-      // a failed network call here just means the button felt slower.
+    function handler(e) {
+      if (!dirty) return;
+      e.preventDefault();
+      e.returnValue = "";
     }
-  }
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [dirty]);
 
   async function loadContent() {
     setLoadingContent(true);
@@ -80,105 +72,169 @@ export default function Admin() {
     setValidationErrors([]);
     try {
       const res = await fetch("/api/content");
-      const data = await res.json().catch(() => ({}));
       if (res.status === 401) {
         setAuthed(false);
-        throw new Error("Session expired — please log in again.");
+        return;
       }
-      if (!res.ok) throw new Error(data.error || "Failed to load content");
-      setJsonText(JSON.stringify(data.content, null, 2));
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Could not load the portfolio content.");
+      setContent(data.content);
+      setSavedSnapshot(JSON.stringify(data.content));
       setSha(data.sha);
+      setPendingImages({});
+      setImageErrors({});
+      setAuthed(true);
     } catch (err) {
-      setMessage({ ok: false, text: err.message });
+      setMessage({ ok: false, text: humanizeCaughtError(err) });
     } finally {
       setLoadingContent(false);
     }
   }
 
-  async function save() {
-    setMessage(null);
-    setValidationErrors([]);
+  // On mount: a GitHub OAuth login lands back here via a full-page redirect,
+  // so we always have to ask the server whether the session is valid.
+  useEffect(() => {
+    (async () => {
+      await loadContent();
+      setCheckingSession(false);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
-    if (parsed.error) {
-      setMessage({ ok: false, text: `Invalid JSON: ${parsed.error}` });
-      return;
+  async function logout() {
+    setAuthed(false);
+    setContent(null);
+    setSavedSnapshot(null);
+    setSha(null);
+    setPendingImages({});
+    setMessage(null);
+    try {
+      await fetch("/api/logout", { method: "POST" });
+    } catch {
+      // Cookie is cleared by the response header regardless of a network hiccup here.
     }
-    const { valid, errors } = validateContent(parsed.value);
+  }
+
+  function updateKey(key) {
+    return (value) => setContent((prev) => ({ ...prev, [key]: value }));
+  }
+
+  // Shared by every image-bearing section: stages a file locally (with a
+  // preview) instead of uploading immediately. The real upload happens as
+  // part of Save.
+  function slotFor(slotId, currentPath, prefix, onPathChange) {
+    const entry = pendingImages[slotId];
+    return {
+      previewUrl: entry ? entry.previewUrl : currentPath,
+      hasImage: Boolean(entry ? entry.previewUrl : currentPath),
+      pending: Boolean(entry),
+      error: imageErrors[slotId] || null,
+      onSelectFile: (file, err) => {
+        if (err) {
+          setImageErrors((e) => ({ ...e, [slotId]: err }));
+          return;
+        }
+        setImageErrors((e) => ({ ...e, [slotId]: null }));
+        const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+        const filename = currentPath ? currentPath.split("/").pop() : `${prefix}-${Date.now()}.${ext}`;
+        const previewUrl = URL.createObjectURL(file);
+        setPendingImages((p) => ({ ...p, [slotId]: { file, filename, previewUrl } }));
+        onPathChange(`/images/${filename}`);
+      },
+      onRemove: () => {
+        setPendingImages((p) => {
+          const next = { ...p };
+          delete next[slotId];
+          return next;
+        });
+        setImageErrors((e) => ({ ...e, [slotId]: null }));
+        onPathChange(null);
+      },
+    };
+  }
+
+  function requestSave() {
+    setMessage(null);
+    const { valid, errors } = validateContent(content);
     if (!valid) {
-      setValidationErrors(errors);
+      setValidationErrors(errors.map(humanizeContentError));
       setMessage({ ok: false, text: "Fix the issues below before saving." });
       return;
     }
-    if (!window.confirm("Save and redeploy the live site with these changes?")) return;
+    setValidationErrors([]);
+    setConfirmSaveOpen(true);
+  }
 
+  async function doSave() {
+    setConfirmSaveOpen(false);
     setSaving(true);
+    setMessage(null);
+
     try {
+      // 1) Upload any staged images first, so content.json never references
+      // a file that doesn't exist yet in the repo.
+      for (const [slotId, entry] of Object.entries(pendingImages)) {
+        const dataUrl = await fileToDataUrl(entry.file);
+        const res = await fetch("/api/upload-image", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ filename: entry.filename, dataUrl }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (res.status === 401) {
+          setAuthed(false);
+          return;
+        }
+        if (!res.ok) {
+          setMessage({ ok: false, text: `Couldn't upload an image: ${data.error || "please try again."}` });
+          setImageErrors((e) => ({ ...e, [slotId]: data.error || "Upload failed" }));
+          return;
+        }
+      }
+
+      // 2) Save the content itself.
       const res = await fetch("/api/save-content", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content: parsed.value, sha }),
+        body: JSON.stringify({ content, sha }),
       });
       const data = await res.json().catch(() => ({}));
+
       if (res.status === 401) {
         setAuthed(false);
-        throw new Error("Session expired — please log in again.");
+        return;
       }
       if (res.status === 409) {
-        throw new Error(`${data.error} Click Reload, then reapply your edits.`);
+        setMessage({
+          ok: false,
+          text: "Someone else changed the portfolio before you saved. Reload the latest content and reapply your changes.",
+        });
+        return;
       }
       if (res.status === 422) {
-        setValidationErrors(data.details || []);
-        throw new Error(data.error);
+        setValidationErrors((data.details || []).map(humanizeContentError));
+        setMessage({ ok: false, text: "The server found some issues — fix them below and save again." });
+        return;
       }
-      if (!res.ok) throw new Error(data.error || "Save failed");
+      if (!res.ok) {
+        setMessage({ ok: false, text: "Couldn't save your changes. Please try again." });
+        return;
+      }
+
       setSha(data.sha);
-      setMessage({ ok: true, text: "Saved. Vercel will redeploy the site in ~1 minute." });
+      setSavedSnapshot(JSON.stringify(content));
+      setPendingImages({});
+      setSavedAt(new Date().toLocaleTimeString());
+      setMessage({ ok: true, text: "Saved successfully. Your changes will go live in about a minute." });
     } catch (err) {
-      setMessage({ ok: false, text: err.message });
+      setMessage({ ok: false, text: humanizeCaughtError(err) });
     } finally {
       setSaving(false);
     }
   }
 
-  async function uploadImage(file) {
-    if (!file || !uploadPath) return;
-    setMessage(null);
-    if (file.size > MAX_IMAGE_BYTES) {
-      setMessage({
-        ok: false,
-        text: `Image too large (${(file.size / 1024 / 1024).toFixed(1)}MB). Max ${MAX_IMAGE_BYTES / 1024 / 1024}MB.`,
-      });
-      return;
-    }
-    setUploading(true);
-    try {
-      const dataUrl = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(new Error("Could not read the selected file"));
-        reader.readAsDataURL(file);
-      });
-      const filename = uploadPath.split("/").pop();
-      const res = await fetch("/api/upload-image", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filename, dataUrl }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (res.status === 401) {
-        setAuthed(false);
-        throw new Error("Session expired — please log in again.");
-      }
-      if (!res.ok) throw new Error(data.error || "Upload failed");
-      setMessage({
-        ok: true,
-        text: `Uploaded to ${data.path}. Vercel will redeploy in ~1 minute (image may take a little longer to update due to caching).`,
-      });
-    } catch (err) {
-      setMessage({ ok: false, text: err.message });
-    } finally {
-      setUploading(false);
-    }
+  function discard() {
+    loadContent();
   }
 
   if (checkingSession) {
@@ -195,118 +251,119 @@ export default function Admin() {
       <div className="app admin-page">
         <div className="hero-grid" />
         <div className="admin-shell">
-          <Reveal>
-            <div className="glass grad-border admin-card admin-card-narrow">
-              <p className="admin-kicker">Admin Access</p>
-              <h1 className="admin-title grad-text">Portfolio Control</h1>
-              <a href="/api/github-login" className="btn btn-solid admin-github-btn">
-                <Icon.Github />
-                Log in with GitHub
-              </a>
-            </div>
-          </Reveal>
+          <div className="glass grad-border admin-card admin-card-narrow">
+            <p className="admin-kicker">Admin Access</p>
+            <h1 className="admin-title grad-text">Portfolio Control</h1>
+            <a href="/api/github-login" className="btn btn-solid admin-github-btn">
+              <Icon.Github />
+              Log in with GitHub
+            </a>
+          </div>
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="app admin-page">
-      <div className="hero-grid" />
-      <div className="admin-shell">
-        <Reveal>
-          <div className="glass grad-border admin-card">
-            <div className="admin-header">
-              <div>
-                <p className="admin-kicker">Admin Access</p>
-                <h1 className="admin-title grad-text">Content Editor</h1>
-              </div>
-              <button className="btn btn-ghost" onClick={logout}>
-                Log out
-              </button>
-            </div>
-            <p className="admin-sub">
-              Edit the JSON below — all portfolio text, links, stats, and experience. Saving
-              commits straight to GitHub and Vercel redeploys the live site automatically.
-            </p>
-
-            <textarea
-              className="admin-textarea"
-              value={jsonText}
-              onChange={(e) => setJsonText(e.target.value)}
-              spellCheck={false}
-              disabled={loadingContent}
-            />
-            {parsed.error && (
-              <div className="admin-msg admin-msg-error">Invalid JSON: {parsed.error}</div>
-            )}
-
-            <div className="admin-actions">
-              <button
-                className={`btn btn-solid ${busy ? "btn-disabled" : ""}`}
-                onClick={save}
-                disabled={busy}
-              >
-                {saving ? "Saving…" : "Save & Deploy"}
-              </button>
-              <button
-                className={`btn btn-ghost ${busy ? "btn-disabled" : ""}`}
-                onClick={loadContent}
-                disabled={busy}
-              >
-                {loadingContent ? "Reloading…" : "Reload"}
-              </button>
-            </div>
-
-            {message && (
-              <div className={`admin-msg ${message.ok ? "admin-msg-ok" : "admin-msg-error"}`}>
-                {message.text}
-              </div>
-            )}
-            {validationErrors.length > 0 && (
-              <ul className="admin-error-list">
-                {validationErrors.map((e, i) => (
-                  <li key={i}>{e}</li>
-                ))}
-              </ul>
-            )}
-
-            <div className="admin-section">
-              <h3>Replace an image</h3>
-              <p className="admin-sub">
-                Pick which image to overwrite, then choose a file (max{" "}
-                {MAX_IMAGE_BYTES / 1024 / 1024}MB). The existing path in the JSON above keeps
-                working — the file behind it is replaced in place.
-              </p>
-              <select
-                className="admin-select"
-                value={uploadPath}
-                onChange={(e) => setUploadPath(e.target.value)}
-                disabled={uploading}
-              >
-                {imagePaths.map((p) => (
-                  <option key={p} value={p}>
-                    {p}
-                  </option>
-                ))}
-              </select>
-              <input
-                className="admin-file"
-                type="file"
-                accept="image/jpeg,image/png,image/webp,image/gif"
-                onChange={(e) => uploadImage(e.target.files[0])}
-                disabled={uploading || !uploadPath}
-              />
-              {uploading && <p className="admin-loading">Uploading…</p>}
-              <p className="admin-hint">
-                To add a brand-new image (e.g. a new NFT card), add its entry in the JSON with a
-                new path like <code>/images/new-card.jpg</code>, save, then come back here, pick
-                that path from the list and upload the file.
-              </p>
-            </div>
-          </div>
-        </Reveal>
+  if (!content) {
+    return (
+      <div className="app admin-page">
+        <div className="hero-grid" />
+        <p className="admin-loading">{message ? message.text : "Loading…"}</p>
       </div>
+    );
+  }
+
+  const sectionProps = {
+    overview: { content, savedAt, dirty, onNavigate: setActiveSection },
+    profile: {
+      profile: content.PROFILE,
+      onChange: updateKey("PROFILE"),
+      typerWords: content.TYPER_WORDS,
+      onTyperWordsChange: updateKey("TYPER_WORDS"),
+      slotFor,
+    },
+    stats: { stats: content.ABOUT_STATS, onChange: updateKey("ABOUT_STATS") },
+    experience: { experience: content.EXPERIENCE, onChange: updateKey("EXPERIENCE") },
+    skills: {
+      skillGroups: content.SKILL_GROUPS,
+      onSkillGroupsChange: updateKey("SKILL_GROUPS"),
+      techSkills: content.TECH_SKILLS,
+      onTechSkillsChange: updateKey("TECH_SKILLS"),
+      tools: content.TOOLS,
+      onToolsChange: updateKey("TOOLS"),
+      aiTools: content.AI_TOOLS,
+      onAiToolsChange: updateKey("AI_TOOLS"),
+    },
+    nft: { collections: content.NFT_COLLECTIONS, onChange: updateKey("NFT_COLLECTIONS"), slotFor },
+    achievements: { achievements: content.ACHIEVEMENTS, onChange: updateKey("ACHIEVEMENTS") },
+    goals: { goals: content.GOALS, onChange: updateKey("GOALS") },
+    threads: { tweets: content.TWEETS, onChange: updateKey("TWEETS"), slotFor },
+    socials: { socials: content.SOCIALS, onChange: updateKey("SOCIALS") },
+  };
+
+  const Section = {
+    overview: OverviewSection,
+    profile: ProfileSection,
+    stats: AboutStatsSection,
+    experience: ExperienceSection,
+    skills: SkillsSection,
+    nft: NFTSection,
+    achievements: AchievementsSection,
+    goals: GoalsSection,
+    threads: ThreadsSection,
+    socials: SocialsSection,
+  }[activeSection];
+
+  return (
+    <div className="app dashboard">
+      <div className={`sidebar-wrap ${mobileNavOpen ? "sidebar-wrap-open" : ""}`}>
+        <Sidebar active={activeSection} onSelect={setActiveSection} onClose={() => setMobileNavOpen(false)} />
+      </div>
+      {mobileNavOpen && <div className="sidebar-scrim" onClick={() => setMobileNavOpen(false)} />}
+
+      <div className="dashboard-main">
+        <SaveBar
+          dirty={dirty}
+          saving={saving || loadingContent}
+          savedAt={savedAt}
+          onSave={requestSave}
+          onDiscard={discard}
+          onLogout={logout}
+          onMenu={() => setMobileNavOpen(true)}
+        />
+
+        <main className="dashboard-content">
+          <h2 className="dashboard-heading">{SECTION_TITLES[activeSection]}</h2>
+
+          {message && <div className={`admin-msg ${message.ok ? "admin-msg-ok" : "admin-msg-error"}`}>{message.text}</div>}
+          {validationErrors.length > 0 && (
+            <ul className="admin-error-list">
+              {validationErrors.map((e, i) => (
+                <li key={i}>
+                  {e.sectionId && e.sectionId !== activeSection ? (
+                    <button type="button" className="error-jump" onClick={() => setActiveSection(e.sectionId)}>
+                      {e.text} — go to section →
+                    </button>
+                  ) : (
+                    e.text
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <Section {...sectionProps[activeSection]} />
+        </main>
+      </div>
+
+      <ConfirmDialog
+        open={confirmSaveOpen}
+        title="Save & deploy?"
+        body="This will update the portfolio source and trigger a new deployment. Changes may take a short time to appear on the live site."
+        confirmLabel="Save & Deploy"
+        onCancel={() => setConfirmSaveOpen(false)}
+        onConfirm={doSave}
+      />
     </div>
   );
 }
