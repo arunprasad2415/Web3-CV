@@ -86,22 +86,25 @@ password to manage or leak.
 
 1. Create a GitHub OAuth App: **GitHub → Settings → Developer settings →
    OAuth Apps → New OAuth App**.
-   - Homepage URL: `https://waifudrops.xyz`
-   - Authorization callback URL: `https://waifudrops.xyz/api/github-callback`
+   - Homepage URL: `https://www.waifudrops.xyz`
+   - Authorization callback URL: `https://www.waifudrops.xyz/api/github-callback`
 2. Copy its **Client ID**, and generate + copy a **Client secret**.
-3. In the Vercel project's Environment Variables, add:
+3. In the Vercel project's Environment Variables (Production), add:
 
-| Variable                    | Value                                                              |
-|------------------------------|---------------------------------------------------------------------|
-| `GITHUB_OAUTH_CLIENT_ID`     | Client ID from the OAuth App                                       |
-| `GITHUB_OAUTH_CLIENT_SECRET` | Client secret from the OAuth App                                   |
-| `ADMIN_GITHUB_USERNAME`      | `arunprasad2415` — only this GitHub account can log in             |
-| `ADMIN_SECRET`                | Any long random string (used to sign the session cookie)           |
-| `SITE_URL`                    | `https://waifudrops.xyz`                                           |
-| `GITHUB_TOKEN`                | A GitHub personal access token with `repo` (or fine-grained "Contents: Read and write") scope on this repo |
-| `GITHUB_OWNER`                | `arunprasad2415`                                                     |
-| `GITHUB_REPO`                 | `Web3-CV`                                                            |
-| `GITHUB_BRANCH`               | `main` (optional, defaults to `main`)                                |
+| Variable                      | Value                                                              |
+|--------------------------------|---------------------------------------------------------------------|
+| `GITHUB_OAUTH_CLIENT_ID`       | Client ID from the OAuth App                                       |
+| `GITHUB_OAUTH_CLIENT_SECRET`   | Client secret from the OAuth App                                   |
+| `ADMIN_SECRET`                 | Any long random string (used to sign the session cookie)           |
+| `SITE_URL`                     | `https://www.waifudrops.xyz` — must exactly match the callback URL registered above |
+| `GITHUB_TOKEN`                 | A GitHub personal access token with `repo` (or fine-grained "Contents: Read and write") scope on this repo |
+| `GITHUB_OWNER`                 | `arunprasad2415`                                                     |
+| `GITHUB_REPO`                  | `Web3-CV`                                                            |
+| `GITHUB_BRANCH`                | `main` (optional, defaults to `main`)                                |
+
+The allowed GitHub login (`arunprasad2415`) is hardcoded in
+`api/github-callback.js` rather than an env var — it's a fixed identity, not
+a per-environment secret.
 
 `GITHUB_TOKEN` (repo write access) and `GITHUB_OAUTH_CLIENT_SECRET` (login)
 are two different secrets serving two different purposes — both are needed.

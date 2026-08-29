@@ -5,7 +5,8 @@ import { siteUrl } from "./_site.js";
 export default function handler(req, res) {
   const clientId = process.env.GITHUB_OAUTH_CLIENT_ID;
   if (!clientId) {
-    return res.status(500).send("GitHub OAuth is not configured (missing GITHUB_OAUTH_CLIENT_ID).");
+    console.error("GitHub OAuth login attempted but GITHUB_OAUTH_CLIENT_ID is not set");
+    return res.status(500).send("GitHub login is not configured yet. Contact the site owner.");
   }
 
   const state = crypto.randomBytes(24).toString("hex");

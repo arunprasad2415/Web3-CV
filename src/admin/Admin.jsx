@@ -199,9 +199,6 @@ export default function Admin() {
             <div className="glass grad-border admin-card admin-card-narrow">
               <p className="admin-kicker">Admin Access</p>
               <h1 className="admin-title grad-text">Portfolio Control</h1>
-              <p className="admin-sub">
-                Restricted to the <code>arunprasad2415</code> GitHub account.
-              </p>
               <a href="/api/github-login" className="btn btn-solid admin-github-btn">
                 <Icon.Github />
                 Log in with GitHub

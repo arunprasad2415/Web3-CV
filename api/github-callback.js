@@ -1,6 +1,12 @@
 import { readStateCookie, clearStateCookie, makeSessionCookie } from "./_auth.js";
 import { siteUrl } from "./_site.js";
 
+// The only GitHub account allowed into the admin panel. Not a secret (it's
+// a public username), so it's a constant rather than another env var to
+// misconfigure — the identity itself is fixed, unlike the OAuth app
+// credentials which vary per environment.
+const ALLOWED_GITHUB_USERNAME = "arunprasad2415";
+
 function page(title, body) {
   return `<!doctype html><html><head><meta charset="utf-8"><title>${title}</title>
 <style>body{font-family:system-ui,sans-serif;background:#0b0d12;color:#eaeaea;display:flex;
@@ -23,10 +29,9 @@ export default async function handler(req, res) {
 
   const clientId = process.env.GITHUB_OAUTH_CLIENT_ID;
   const clientSecret = process.env.GITHUB_OAUTH_CLIENT_SECRET;
-  const allowedUser = process.env.ADMIN_GITHUB_USERNAME;
-  if (!clientId || !clientSecret || !allowedUser) {
-    console.error("GitHub OAuth callback hit but not fully configured");
-    return res.status(500).send(page("Not configured", "GitHub OAuth is not set up yet."));
+  if (!clientId || !clientSecret) {
+    console.error("GitHub OAuth callback hit but GITHUB_OAUTH_CLIENT_ID/SECRET are not set");
+    return res.status(500).send(page("Not configured", "GitHub login is not set up yet. Contact the site owner."));
   }
 
   try {
@@ -54,15 +59,10 @@ export default async function handler(req, res) {
     const user = await userRes.json();
     if (!userRes.ok || !user.login) throw new Error("could not fetch GitHub user");
 
-    if (user.login.toLowerCase() !== allowedUser.toLowerCase()) {
+    if (user.login.toLowerCase() !== ALLOWED_GITHUB_USERNAME.toLowerCase()) {
       return res
         .status(403)
-        .send(
-          page(
-            "Access denied",
-            `This admin panel is restricted to the GitHub account "${allowedUser}". You're logged in as "${user.login}".`
-          )
-        );
+        .send(page("Access denied", "This GitHub account is not authorized for this admin panel."));
     }
 
     res.setHeader("Set-Cookie", [clearStateCookie(), makeSessionCookie()]);
