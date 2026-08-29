@@ -25,6 +25,7 @@
 .hero-avatar-float { margin: 0 auto 2rem; display: grid; place-items: center; height: 13rem; width: 13rem; animation: float 6s ease-in-out infinite; }
 .hero-avatar { display: grid; place-items: center; height: 13rem; width: 13rem; border-radius: 9999px; background: linear-gradient(to bottom right, #27272a, #000); overflow: hidden; }
 .hero-avatar-img { height: 100%; width: 100%; object-fit: cover; border-radius: 9999px; }
+.hero-avatar-initials { font-family: var(--font-display); font-size: 2.75rem; color: #fff; }
 
 .hero-name { font-family: var(--font-display); font-weight: 800; letter-spacing: -.02em; color: #fff; font-size: clamp(2.25rem, 7vw, 3.75rem); margin: 0; }
 .hero-title { margin-top: .75rem; font-size: clamp(.875rem, 2vw, 1rem); letter-spacing: .25em; text-transform: uppercase; color: var(--zinc-400); }

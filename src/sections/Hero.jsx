@@ -1,10 +1,8 @@
 import React from "react";
 import Reveal from "../components/Reveal";
 import Typer from "../components/Typer";
-import CursorScrubVideo from "../components/CursorScrubVideo";
+import AnimatedEyeAvatar from "../components/AnimatedEyeAvatar";
 import { PROFILE, TYPER_WORDS } from "../data/content";
-
-const HERO_VIDEO = "/videos/hero-head.mp4";
 
 // Full-screen landing hero with avatar, typing effect, particles, CTAs.
 export default function Hero({ scrollY, scrollTo }) {
@@ -19,13 +17,11 @@ export default function Hero({ scrollY, scrollTo }) {
         <Reveal delay={150}>
           <div className="hero-avatar-float">
             <div className="grad-border hero-avatar">
-              <CursorScrubVideo
-                src={HERO_VIDEO}
-                axis="horizontal"
-                objectFit="cover"
-                borderRadius="9999px"
-                className="hero-avatar-img"
-              />
+              {PROFILE.photo ? (
+                <AnimatedEyeAvatar src={PROFILE.photo} className="hero-avatar-img" />
+              ) : (
+                <span className="hero-avatar-initials">{PROFILE.initials}</span>
+              )}
             </div>
           </div>
         </Reveal>
