@@ -10,22 +10,25 @@ const HERO_VIDEO = "/videos/hero-head.mp4";
 export default function Hero({ scrollY, scrollTo }) {
   return (
     <section id="hero" className="hero">
-      <div className="hero-video-bg">
-        <CursorScrubVideo
-          src={HERO_VIDEO}
-          axis="horizontal"
-          trackingArea="window"
-          objectFit="cover"
-          className="hero-video-bg-el"
-        />
-        <div className="hero-video-scrim" />
-      </div>
       <div className="hero-grid" />
       <div className="hero-glow" />
       <div
         className="hero-content"
         style={{ transform: `translateY(${scrollY * 0.18}px)`, opacity: Math.max(0, 1 - scrollY / 600) }}
       >
+        <Reveal delay={150}>
+          <div className="hero-avatar-float">
+            <div className="grad-border hero-avatar">
+              <CursorScrubVideo
+                src={HERO_VIDEO}
+                axis="horizontal"
+                objectFit="cover"
+                borderRadius="9999px"
+                className="hero-avatar-img"
+              />
+            </div>
+          </div>
+        </Reveal>
         <Reveal delay={300}>
           <h1 className="hero-name">{PROFILE.name}</h1>
         </Reveal>
