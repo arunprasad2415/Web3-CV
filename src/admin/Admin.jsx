@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { validateContent } from "../lib/validateContent.js";
 
 const MAX_IMAGE_BYTES = 3 * 1024 * 1024;
@@ -100,10 +100,8 @@ function tryParse(text) {
 }
 
 export default function Admin() {
-  const [password, setPassword] = useState("");
   const [authed, setAuthed] = useState(false);
-  const [loginError, setLoginError] = useState("");
-  const [loggingIn, setLoggingIn] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
 
   const [jsonText, setJsonText] = useState("");
   const [sha, setSha] = useState(null);
@@ -119,30 +117,24 @@ export default function Admin() {
   const parsed = useMemo(() => tryParse(jsonText || "{}"), [jsonText]);
   const imagePaths = useMemo(() => extractImagePaths(parsed.value), [parsed.value]);
 
-  async function login(e) {
-    e.preventDefault();
-    setLoginError("");
-    setLoggingIn(true);
-    try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ password }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        setLoginError(data.error || "Wrong password.");
-        return;
+  // Runs once on mount: a GitHub OAuth login lands back here via a full-page
+  // redirect (not a fetch), so React state starts fresh and has to ask the
+  // server whether the session cookie it already has is valid.
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/content");
+        if (res.ok) {
+          const data = await res.json();
+          setJsonText(JSON.stringify(data.content, null, 2));
+          setSha(data.sha);
+          setAuthed(true);
+        }
+      } finally {
+        setCheckingSession(false);
       }
-      setPassword("");
-      setAuthed(true);
-      loadContent();
-    } catch {
-      setLoginError("Network error — could not reach the server.");
-    } finally {
-      setLoggingIn(false);
-    }
-  }
+    })();
+  }, []);
 
   async function logout() {
     setAuthed(false);
@@ -265,30 +257,30 @@ export default function Admin() {
     }
   }
 
+  if (checkingSession) {
+    return (
+      <div style={styles.page}>
+        <div style={{ ...styles.card, maxWidth: 380, marginTop: "10vh", textAlign: "center" }}>
+          <p style={{ color: "#9aa1b3" }}>Checking session...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!authed) {
     return (
       <div style={styles.page}>
-        <div style={{ ...styles.card, maxWidth: 380, marginTop: "10vh" }}>
+        <div style={{ ...styles.card, maxWidth: 380, marginTop: "10vh", textAlign: "center" }}>
           <h2 style={{ marginTop: 0 }}>Admin Login</h2>
-          <form onSubmit={login}>
-            <input
-              style={styles.input}
-              type="password"
-              placeholder="Admin password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoFocus
-              disabled={loggingIn}
-            />
-            <button
-              style={{ ...styles.button, ...(loggingIn ? styles.buttonDisabled : {}) }}
-              type="submit"
-              disabled={loggingIn}
-            >
-              {loggingIn ? "Logging in..." : "Log in"}
-            </button>
-          </form>
-          {loginError && <div style={styles.msg(false)}>{loginError}</div>}
+          <p style={{ color: "#9aa1b3", fontSize: 14 }}>
+            Restricted to the <code>arunprasad2415</code> GitHub account.
+          </p>
+          <a
+            href="/api/github-login"
+            style={{ ...styles.button, display: "inline-block", textDecoration: "none" }}
+          >
+            Log in with GitHub
+          </a>
         </div>
       </div>
     );

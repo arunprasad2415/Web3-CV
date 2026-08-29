@@ -1,7 +1,9 @@
 import crypto from "node:crypto";
 
-const COOKIE_NAME = "admin_session";
-const MAX_AGE_SECONDS = 60 * 60 * 8; // 8 hours
+const SESSION_COOKIE = "admin_session";
+const STATE_COOKIE = "oauth_state";
+const SESSION_MAX_AGE = 60 * 60 * 8; // 8 hours
+const STATE_MAX_AGE = 60 * 10; // 10 minutes, just long enough for the GitHub redirect round trip
 
 function sign(value) {
   const secret = process.env.ADMIN_SECRET;
@@ -9,23 +11,28 @@ function sign(value) {
   return crypto.createHmac("sha256", secret).update(value).digest("hex");
 }
 
+function readCookie(req, name) {
+  const cookies = req.headers.cookie || "";
+  const match = cookies.match(new RegExp(`(?:^|; )${name}=([^;]+)`));
+  return match ? match[1] : null;
+}
+
 export function makeSessionCookie() {
-  const expires = Date.now() + MAX_AGE_SECONDS * 1000;
+  const expires = Date.now() + SESSION_MAX_AGE * 1000;
   const payload = `${expires}`;
   const token = `${payload}.${sign(payload)}`;
-  return `${COOKIE_NAME}=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${MAX_AGE_SECONDS}`;
+  return `${SESSION_COOKIE}=${token}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=${SESSION_MAX_AGE}`;
 }
 
 export function clearSessionCookie() {
-  return `${COOKIE_NAME}=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0`;
+  return `${SESSION_COOKIE}=; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=0`;
 }
 
 export function isAuthed(req) {
   try {
-    const cookies = req.headers.cookie || "";
-    const match = cookies.match(new RegExp(`${COOKIE_NAME}=([^;]+)`));
-    if (!match) return false;
-    const [expires, sig] = match[1].split(".");
+    const value = readCookie(req, SESSION_COOKIE);
+    if (!value) return false;
+    const [expires, sig] = value.split(".");
     if (!expires || !sig || !/^\d+$/.test(expires)) return false;
     if (Number(expires) < Date.now()) return false;
     const expected = sign(expires);
@@ -45,33 +52,19 @@ export function requireAuth(req, res) {
   return true;
 }
 
-// Best-effort login throttling: an in-memory counter per IP, scoped to a
-// single warm serverless instance (ponytail: not shared across instances or
-// cold starts — a real distributed limiter needs a KV store, add one if
-// brute-force attempts become an observed problem).
-const attempts = new Map();
-const WINDOW_MS = 10 * 60 * 1000;
-const MAX_ATTEMPTS = 8;
-
-export function isRateLimited(req) {
-  const ip = (req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "unknown")
-    .toString()
-    .split(",")[0]
-    .trim();
-  const now = Date.now();
-  const entry = attempts.get(ip);
-  if (!entry || now - entry.start > WINDOW_MS) {
-    attempts.set(ip, { start: now, count: 1 });
-    return false;
-  }
-  entry.count += 1;
-  return entry.count > MAX_ATTEMPTS;
+// Short-lived cookie holding the OAuth "state" value, so the callback can
+// confirm the redirect back from GitHub belongs to a login this server
+// actually started (CSRF protection for the OAuth flow). SameSite=Lax
+// (not Strict) because this cookie must survive GitHub's top-level
+// redirect back to our callback URL.
+export function makeStateCookie(state) {
+  return `${STATE_COOKIE}=${state}; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=${STATE_MAX_AGE}`;
 }
 
-export function resetRateLimit(req) {
-  const ip = (req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "unknown")
-    .toString()
-    .split(",")[0]
-    .trim();
-  attempts.delete(ip);
+export function clearStateCookie() {
+  return `${STATE_COOKIE}=; HttpOnly; Secure; SameSite=Lax; Path=/; Max-Age=0`;
+}
+
+export function readStateCookie(req) {
+  return readCookie(req, STATE_COOKIE);
 }

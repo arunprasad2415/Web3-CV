@@ -79,21 +79,37 @@ web3-portfolio/
 Edit the live site's content from a browser instead of git — save commits
 straight to this repo's `main` branch and Vercel auto-redeploys.
 
-**Setup (one time), in the Vercel project's Environment Variables:**
+Login is GitHub OAuth, restricted to a single allowed GitHub username — no
+password to manage or leak.
 
-| Variable         | Value                                                              |
-|------------------|---------------------------------------------------------------------|
-| `ADMIN_PASSWORD` | Password you'll use to log into `/admin`                            |
-| `ADMIN_SECRET`   | Any long random string (used to sign the login session cookie)      |
-| `GITHUB_TOKEN`   | A GitHub personal access token with `repo` (or fine-grained "Contents: Read and write") scope on this repo |
-| `GITHUB_OWNER`   | `arunprasad2415`                                                     |
-| `GITHUB_REPO`    | `Web3-CV`                                                            |
-| `GITHUB_BRANCH`  | `main` (optional, defaults to `main`)                                |
+**One-time setup:**
+
+1. Create a GitHub OAuth App: **GitHub → Settings → Developer settings →
+   OAuth Apps → New OAuth App**.
+   - Homepage URL: `https://waifudrops.xyz`
+   - Authorization callback URL: `https://waifudrops.xyz/api/github-callback`
+2. Copy its **Client ID**, and generate + copy a **Client secret**.
+3. In the Vercel project's Environment Variables, add:
+
+| Variable                    | Value                                                              |
+|------------------------------|---------------------------------------------------------------------|
+| `GITHUB_OAUTH_CLIENT_ID`     | Client ID from the OAuth App                                       |
+| `GITHUB_OAUTH_CLIENT_SECRET` | Client secret from the OAuth App                                   |
+| `ADMIN_GITHUB_USERNAME`      | `arunprasad2415` — only this GitHub account can log in             |
+| `ADMIN_SECRET`                | Any long random string (used to sign the session cookie)           |
+| `SITE_URL`                    | `https://waifudrops.xyz`                                           |
+| `GITHUB_TOKEN`                | A GitHub personal access token with `repo` (or fine-grained "Contents: Read and write") scope on this repo |
+| `GITHUB_OWNER`                | `arunprasad2415`                                                     |
+| `GITHUB_REPO`                 | `Web3-CV`                                                            |
+| `GITHUB_BRANCH`               | `main` (optional, defaults to `main`)                                |
+
+`GITHUB_TOKEN` (repo write access) and `GITHUB_OAUTH_CLIENT_SECRET` (login)
+are two different secrets serving two different purposes — both are needed.
 
 Redeploy after adding these. Then visit `https://waifudrops.xyz/admin`,
-log in, edit the JSON, and hit **Save & Deploy**. Image slots (profile
-photo, NFT cards, tweet screenshots) can be replaced in place from the same
-page without touching the JSON.
+click **Log in with GitHub**, edit the JSON, and hit **Save & Deploy**. Image
+slots (profile photo, NFT cards, tweet screenshots) can be replaced in place
+from the same page without touching the JSON.
 
 `npm run dev` only serves the frontend — the `/api` functions need
 `vercel dev` (or Vercel's dashboard) to run, since they're serverless
