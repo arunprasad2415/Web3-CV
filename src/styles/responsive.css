@@ -34,8 +34,6 @@ html, body { max-width: 100%; overflow-x: hidden; }
   .nav-socials { gap: .35rem; }
 
   /* --- hero --- */
-  .hero-avatar-float,
-  .hero-avatar { height: 9.5rem; width: 9.5rem; }
   .hero-name { font-size: 2.1rem; }
   .hero-title { font-size: .7rem; letter-spacing: .18em; }
   .hero-typer { font-size: 1.05rem; }
